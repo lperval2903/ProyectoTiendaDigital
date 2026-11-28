@@ -11,6 +11,7 @@ public class Producto {
     public int getIdProducto() {return idProducto;}
     public void setIdProducto(int idProducto) {this.idProducto = idProducto;}
 
+    public int getIdCategoria() {return idCategoria;}
     public int idCategoria() {return idCategoria;}
     public void setIdCategoria(int idCategoria) {this.idCategoria = idCategoria;}
 

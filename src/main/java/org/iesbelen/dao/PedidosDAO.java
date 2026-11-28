@@ -10,6 +10,7 @@ public interface PedidosDAO {
     void create(Pedidos pedidos);
     List<Pedidos> getAll();
     Optional<Pedidos> find(int id);
-    Optional<Pedidos> authenticate(String username, String password);
+    void update(Pedidos pedidos);
+    void delete(int id);
 
 }
