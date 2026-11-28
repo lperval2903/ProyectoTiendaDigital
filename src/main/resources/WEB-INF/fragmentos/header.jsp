@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <div class="border-b border-white/10 bg-panel px-4 py-2 text-center text-xs font-medium text-zinc-300">
-    Envío gratis en pedidos superiores a <span class="font-bold text-acid">99 €</span>
+    Ropa, periféricos y artículos de colección de Counter-Strike
 </div>
 
 <header class="relative z-10 border-b border-white/10 bg-ink/90">

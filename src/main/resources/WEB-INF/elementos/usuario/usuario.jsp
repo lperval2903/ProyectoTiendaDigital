@@ -20,14 +20,14 @@
         <h2 class="text-lg font-bold">Crear usuario</h2>
         <form action="${pageContext.request.contextPath}/admin/usuarios/crear" method="post" class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <label class="sr-only" for="nombreUsuario">Nombre de usuario</label>
-            <input id="nombreUsuario" name="nombre" required maxlength="100" autocomplete="username" placeholder="Nombre de usuario"
+            <input id="nombreUsuario" name="nombre" required maxlength="20" autocomplete="username" placeholder="Nombre de usuario"
                    class="rounded-lg border border-white/10 bg-ink px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-acid">
             <label class="sr-only" for="contrasenaUsuario">Contraseña</label>
             <input id="contrasenaUsuario" name="contrasena" required autocomplete="new-password" type="password" placeholder="Contraseña"
                    class="rounded-lg border border-white/10 bg-ink px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-acid">
             <label class="sr-only" for="rolUsuario">Rol</label>
             <select id="rolUsuario" name="rol" required class="rounded-lg border border-white/10 bg-ink px-4 py-3 text-sm outline-none focus:border-acid">
-                <option value="usuario">Usuario</option>
+                <option value="cliente">Usuario</option>
                 <option value="admin">Administrador</option>
             </select>
             <button class="rounded-lg bg-acid px-5 py-3 text-sm font-extrabold text-ink transition hover:bg-white" type="submit">Crear cuenta</button>
@@ -51,7 +51,7 @@
                                 <input type="hidden" name="nombre" value="<c:out value='${usuario.nombre}'/>">
                                 <label class="sr-only" for="rol-${usuario.idUsuario}">Nuevo rol</label>
                                 <select id="rol-${usuario.idUsuario}" name="rol" class="rounded-md border border-white/10 bg-ink px-3 py-2 text-xs outline-none focus:border-acid">
-                                    <option value="usuario" <c:if test="${usuario.rol == 'usuario'}">selected</c:if>>Usuario</option>
+                                    <option value="cliente" <c:if test="${usuario.rol == 'cliente'}">selected</c:if>>Usuario</option>
                                     <option value="admin" <c:if test="${usuario.rol == 'admin'}">selected</c:if>>Administrador</option>
                                 </select>
                             </form>

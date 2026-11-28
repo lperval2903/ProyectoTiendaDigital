@@ -6,7 +6,7 @@
                 colors: {
                     ink: '#111312',
                     panel: '#1b1e1c',
-                    acid: '#a8b69b'
+                    acid: '#a3ff3f'
                 }
             }
         }

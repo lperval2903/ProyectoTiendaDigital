@@ -94,8 +94,8 @@ public class UsuarioServlet extends HttpServlet {
             throws ServletException, IOException {
         String username = parameter(request, "nombre");
         String password = request.getParameter("contrasena");
-        if (username == null || username.isEmpty() || username.length() > 50 || password == null || password.length() < 4) {
-            request.setAttribute("error", "Indica un usuario de hasta 50 caracteres y una contraseña de al menos 4.");
+        if (username == null || username.isEmpty() || username.length() > 20 || password == null || password.length() < 4) {
+            request.setAttribute("error", "Indica un usuario de hasta 20 caracteres y una contraseña de al menos 4.");
             request.getRequestDispatcher("/WEB-INF/registro.jsp").forward(request, response);
             return;
         }
@@ -110,7 +110,7 @@ public class UsuarioServlet extends HttpServlet {
         Usuario usuario = new Usuario();
         usuario.setNombre(username);
         usuario.setContrasena(PasswordUtil.hash(password));
-        usuario.setRol("usuario");
+        usuario.setRol("cliente");
         usuarioDAO.create(usuario);
         response.sendRedirect(request.getContextPath() + "/usuarios/login?registrado=1");
     }

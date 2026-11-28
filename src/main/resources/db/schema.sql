@@ -13,7 +13,7 @@ USE proyectoTiendaDigital;
 -- Tabla: categoria
 -- Agrupa los productos del catálogo para facilitar búsquedas y filtros.
 -- ----------------------------------------------------------------------------
-CREATE TABLE categoria (
+CREATE TABLE if not exists categoria (
                            id_categoria    INT AUTO_INCREMENT PRIMARY KEY,
                            nombreCategoria VARCHAR(50) NOT NULL UNIQUE
 );
@@ -30,9 +30,9 @@ CREATE TABLE usuario (
                              CHECK (rol IN ('cliente', 'admin'))
 );
 
-ALTER TABLE usuario
-    ADD COLUMN rol VARCHAR(10) NOT NULL DEFAULT 'cliente'
-        CHECK (rol IN ('cliente', 'admin'));
+INSERT INTO usuario (nombreUsuario, contrasena, rol) VALUES
+    ('admin', SHA2('12345678', 256), 'admin'),
+    ('usuario', SHA2('usuario', 256), 'cliente');
 
 -- ----------------------------------------------------------------------------
 -- Tabla: productos

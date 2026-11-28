@@ -20,7 +20,7 @@
         <form action="${pageContext.request.contextPath}/usuarios/registro" method="post" class="mt-6 space-y-4">
             <div>
                 <label for="nombre" class="mb-2 block text-sm font-semibold">Usuario</label>
-                <input id="nombre" name="nombre" required maxlength="50" autocomplete="username"
+                <input id="nombre" name="nombre" required maxlength="20" autocomplete="username"
                        class="w-full rounded-lg border border-white/10 bg-ink px-4 py-3 text-sm outline-none focus:border-acid">
             </div>
             <div>

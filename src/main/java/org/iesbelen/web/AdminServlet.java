@@ -151,14 +151,14 @@ public class AdminServlet extends HttpServlet {
         if ("crear".equals(action)) {
             String password = required(request, "contrasena");
             Usuario usuario = new Usuario();
-            usuario.setNombre(required(request, "nombre", 50));
+            usuario.setNombre(required(request, "nombre", 20));
             usuario.setContrasena(PasswordUtil.hash(password));
             usuario.setRol(validRole(request.getParameter("rol")));
             usuarioDAO.create(usuario);
         } else if ("editar".equals(action)) {
             Usuario usuario = new Usuario();
             usuario.setIdUsuario(positiveInt(request, "idUsuario"));
-            usuario.setNombre(required(request, "nombre", 50));
+            usuario.setNombre(required(request, "nombre", 20));
             usuario.setRol(validRole(request.getParameter("rol")));
             ensureAdminRemains(usuario.getIdUsuario(), usuario.getRol());
             usuarioDAO.update(usuario);
@@ -282,7 +282,7 @@ public class AdminServlet extends HttpServlet {
     }
 
     private String validRole(String role) {
-        if (!Arrays.asList("admin", "usuario").contains(role)) {
+        if (!Arrays.asList("admin", "cliente").contains(role)) {
             throw new IllegalArgumentException("El rol indicado no es válido.");
         }
         return role;
