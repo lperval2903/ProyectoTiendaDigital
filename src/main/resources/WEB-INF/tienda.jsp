@@ -13,8 +13,8 @@
 <jsp:include page="/WEB-INF/fragmentos/header.jsp" />
 <main class="mx-auto max-w-7xl px-5 py-12 lg:px-8">
     <section id="categorias" class="mb-10">
-        <p class="text-xs font-bold uppercase tracking-[.2em] text-acid">Xend Shop</p>
-        <h1 class="display-font mt-2 text-5xl font-bold uppercase sm:text-6xl">Equipo para competir</h1>
+        <p class="text-sm font-semibold text-acid">Xend Shop</p>
+        <h1 class="mt-2 text-4xl font-bold sm:text-5xl">Tienda</h1>
         <p class="mt-2 text-sm text-zinc-400">Explora el catálogo y prepara tu próximo setup.</p>
         <div class="mt-6 flex flex-wrap gap-2">
             <a href="${pageContext.request.contextPath}/tienda" class="rounded-full border border-white/15 px-4 py-2 text-xs font-bold transition hover:border-acid hover:text-acid">Todo</a>
@@ -36,9 +36,9 @@
 
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <c:forEach var="producto" items="${listaProductos}">
-            <article class="overflow-hidden rounded-xl border border-white/10 bg-panel transition hover:-translate-y-1 hover:border-acid/40">
-                <div class="flex h-40 items-center justify-center bg-gradient-to-br from-acid/10 via-panel to-black">
-                    <span class="display-font text-5xl font-bold uppercase text-white/10">XEND</span>
+            <article class="overflow-hidden rounded-xl border border-white/10 bg-panel">
+                <div class="flex h-40 items-center justify-center bg-[#171a18]">
+                    <span class="text-4xl font-bold text-white/10">XEND</span>
                 </div>
                 <div class="p-5">
                     <p class="text-[10px] font-bold uppercase tracking-[.18em] text-acid">Producto #<c:out value="${producto.idProducto}"/></p>

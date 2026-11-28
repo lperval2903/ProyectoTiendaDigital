@@ -1,6 +1,7 @@
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<div class="border-b border-white/10 bg-acid px-4 py-2 text-center text-[10px] font-extrabold uppercase tracking-[.2em] text-ink sm:text-xs">
-    Envío gratis en pedidos superiores a 99 € <span class="mx-2">·</span> Equípate para ganar
+<div class="border-b border-white/10 bg-panel px-4 py-2 text-center text-xs font-medium text-zinc-300">
+    Envío gratis en pedidos superiores a <span class="font-bold text-acid">99 €</span>
 </div>
 
 <header class="relative z-10 border-b border-white/10 bg-ink/90">
@@ -10,9 +11,8 @@
             <span class="text-lg font-extrabold tracking-tight">XEND <span class="text-acid">SHOP</span></span>
         </a>
         <div class="hidden items-center gap-8 text-sm font-medium text-zinc-400 md:flex">
+            <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/">Inicio</a>
             <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/tienda">Tienda</a>
-            <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/tienda#categorias">Categorías</a>
-            <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/#ventajas">Ventajas</a>
             <c:if test="${sessionScope['usuario-logado'].rol eq 'admin'}">
                 <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/admin/categorias">Administración</a>
                 <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/admin/productos">Productos</a>
@@ -38,9 +38,8 @@
         </div>
     </nav>
     <div class="flex justify-center gap-6 border-t border-white/5 px-5 py-2.5 text-xs font-medium text-zinc-400 md:hidden">
+        <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/">Inicio</a>
         <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/tienda">Tienda</a>
-        <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/tienda#categorias">Categorías</a>
-        <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/#ventajas">Ventajas</a>
         <c:if test="${sessionScope['usuario-logado'].rol eq 'admin'}">
             <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/admin/categorias">Admin</a>
             <a class="transition hover:text-acid" href="${pageContext.request.contextPath}/admin/productos">Productos</a>

@@ -5,7 +5,6 @@ import org.iesbelen.model.Pedidos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,13 +13,12 @@ public class PedidosDAOImpl extends AbstractDAOImpl implements PedidosDAO {
 
     @Override
     public void create(Pedidos pedido) {
-        String sql = "INSERT INTO pedidos (id_usuario, fecha, estado, total) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO pedido (id_usuario, fecha, estado) VALUES (?, ?, ?)";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, pedido.getIdUsuario());
-            statement.setTimestamp(2, Timestamp.valueOf(pedido.getFecha()));
+            statement.setDate(2, java.sql.Date.valueOf(pedido.getFecha().toLocalDate()));
             statement.setString(3, pedido.getEstado());
-            statement.setDouble(4, pedido.getTotal());
             statement.executeUpdate();
         } catch (Exception e) {
             throw new DaoException("No se pudo crear el pedido.", e);
@@ -30,7 +28,10 @@ public class PedidosDAOImpl extends AbstractDAOImpl implements PedidosDAO {
     @Override
     public List<Pedidos> getAll() {
         List<Pedidos> pedidos = new ArrayList<Pedidos>();
-        String sql = "SELECT id_pedido, id_usuario, fecha, estado, total FROM pedidos ORDER BY fecha DESC";
+        String sql = "SELECT p.id_pedido, p.id_usuario, p.fecha, p.estado, "
+                + "(SELECT COALESCE(SUM(d.cantidad * d.precioUnidad), 0) "
+                + "FROM detallePedido d WHERE d.id_pedido = p.id_pedido) AS total "
+                + "FROM pedido p ORDER BY p.fecha DESC";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
@@ -45,7 +46,10 @@ public class PedidosDAOImpl extends AbstractDAOImpl implements PedidosDAO {
 
     @Override
     public Optional<Pedidos> find(int id) {
-        String sql = "SELECT id_pedido, id_usuario, fecha, estado, total FROM pedidos WHERE id_pedido = ?";
+        String sql = "SELECT p.id_pedido, p.id_usuario, p.fecha, p.estado, "
+                + "(SELECT COALESCE(SUM(d.cantidad * d.precioUnidad), 0) "
+                + "FROM detallePedido d WHERE d.id_pedido = p.id_pedido) AS total "
+                + "FROM pedido p WHERE p.id_pedido = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -59,7 +63,7 @@ public class PedidosDAOImpl extends AbstractDAOImpl implements PedidosDAO {
 
     @Override
     public void update(Pedidos pedido) {
-        String sql = "UPDATE pedidos SET estado = ? WHERE id_pedido = ?";
+        String sql = "UPDATE pedido SET estado = ? WHERE id_pedido = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, pedido.getEstado());
@@ -72,7 +76,7 @@ public class PedidosDAOImpl extends AbstractDAOImpl implements PedidosDAO {
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM pedidos WHERE id_pedido = ?";
+        String sql = "DELETE FROM pedido WHERE id_pedido = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -86,7 +90,7 @@ public class PedidosDAOImpl extends AbstractDAOImpl implements PedidosDAO {
         Pedidos pedido = new Pedidos();
         pedido.setIdPedido(result.getInt("id_pedido"));
         pedido.setIdUsuario(result.getInt("id_usuario"));
-        pedido.setFecha(result.getTimestamp("fecha").toLocalDateTime());
+        pedido.setFecha(result.getDate("fecha").toLocalDate().atStartOfDay());
         pedido.setEstado(result.getString("estado"));
         pedido.setTotal(result.getDouble("total"));
         return pedido;

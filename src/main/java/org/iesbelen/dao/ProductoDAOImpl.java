@@ -13,7 +13,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
 
     @Override
     public void create(Producto producto) {
-        String sql = "INSERT INTO productos (id_categoria, nombre_producto, stock, precio) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO productos (id_categoria, nombreProducto, stock, precio) VALUES (?, ?, ?, ?)";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             bind(statement, producto);
@@ -26,7 +26,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
     @Override
     public List<Producto> getAll() {
         List<Producto> productos = new ArrayList<Producto>();
-        String sql = "SELECT id_producto, id_categoria, nombre_producto, stock, precio FROM productos ORDER BY nombre_producto";
+        String sql = "SELECT id_producto, id_categoria, nombreProducto, stock, precio FROM productos ORDER BY nombreProducto";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
@@ -41,7 +41,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
 
     @Override
     public Optional<Producto> find(int id) {
-        String sql = "SELECT id_producto, id_categoria, nombre_producto, stock, precio FROM productos WHERE id_producto = ?";
+        String sql = "SELECT id_producto, id_categoria, nombreProducto, stock, precio FROM productos WHERE id_producto = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -55,7 +55,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
 
     @Override
     public void update(Producto producto) {
-        String sql = "UPDATE productos SET id_categoria = ?, nombre_producto = ?, stock = ?, precio = ? WHERE id_producto = ?";
+        String sql = "UPDATE productos SET id_categoria = ?, nombreProducto = ?, stock = ?, precio = ? WHERE id_producto = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             bind(statement, producto);
@@ -89,7 +89,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
         Producto producto = new Producto();
         producto.setIdProducto(result.getInt("id_producto"));
         producto.setIdCategoria(result.getInt("id_categoria"));
-        producto.setNombreProducto(result.getString("nombre_producto"));
+        producto.setNombreProducto(result.getString("nombreProducto"));
         producto.setStock(result.getInt("stock"));
         producto.setPrecio(result.getDouble("precio"));
         return producto;

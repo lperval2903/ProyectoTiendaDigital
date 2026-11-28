@@ -4,22 +4,19 @@
         theme: {
             extend: {
                 colors: {
-                    ink: '#080a09',
-                    panel: '#101411',
-                    acid: '#b6ff3b'
-                },
-                fontFamily: {
-                    sans: ['Inter', 'ui-sans-serif', 'system-ui'],
-                    display: ['Barlow Condensed', 'ui-sans-serif', 'system-ui']
+                    ink: '#111312',
+                    panel: '#1b1e1c',
+                    acid: '#a8b69b'
                 }
             }
         }
     };
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    body { font-family: 'Inter', sans-serif; }
-    .display-font { font-family: 'Barlow Condensed', sans-serif; }
+    body { font-family: Arial, Helvetica, sans-serif; }
+    .display-font { font-family: inherit; }
+    .rounded-xl { border-radius: .5rem; }
+    .rounded-2xl { border-radius: .75rem; }
+    h1.uppercase, h2.uppercase { text-transform: none; letter-spacing: normal; }
+    button, a { transition-duration: .15s; }
 </style>

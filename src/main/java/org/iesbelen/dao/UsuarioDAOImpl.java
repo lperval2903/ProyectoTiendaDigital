@@ -14,7 +14,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
     @Override
     public void create(Usuario usuario) {
-        String sql = "INSERT INTO usuarios (nombre, contrasena, rol) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO usuario (nombreUsuario, contrasena, rol) VALUES (?, ?, ?)";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, usuario.getNombre());
@@ -29,14 +29,14 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
     @Override
     public List<Usuario> getAll() {
         List<Usuario> usuarios = new ArrayList<Usuario>();
-        String sql = "SELECT id_usuario, nombre, rol FROM usuarios ORDER BY nombre";
+        String sql = "SELECT id_usuario, nombreUsuario, rol FROM usuario ORDER BY nombreUsuario";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
                 Usuario usuario = new Usuario();
                 usuario.setIdUsuario(result.getInt("id_usuario"));
-                usuario.setNombre(result.getString("nombre"));
+                usuario.setNombre(result.getString("nombreUsuario"));
                 usuario.setRol(result.getString("rol"));
                 usuarios.add(usuario);
             }
@@ -48,7 +48,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
     @Override
     public Optional<Usuario> find(int id) {
-        String sql = "SELECT id_usuario, nombre, rol FROM usuarios WHERE id_usuario = ?";
+        String sql = "SELECT id_usuario, nombreUsuario, rol FROM usuario WHERE id_usuario = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -58,7 +58,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
                 }
                 Usuario usuario = new Usuario();
                 usuario.setIdUsuario(result.getInt("id_usuario"));
-                usuario.setNombre(result.getString("nombre"));
+                usuario.setNombre(result.getString("nombreUsuario"));
                 usuario.setRol(result.getString("rol"));
                 return Optional.of(usuario);
             }
@@ -69,7 +69,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
     @Override
     public Optional<Usuario> authenticate(String username, String password) {
-        String sql = "SELECT id_usuario, nombre, contrasena, rol FROM usuarios WHERE nombre = ?";
+        String sql = "SELECT id_usuario, nombreUsuario, contrasena, rol FROM usuario WHERE nombreUsuario = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
@@ -79,7 +79,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
                 }
                 Usuario usuario = new Usuario();
                 usuario.setIdUsuario(result.getInt("id_usuario"));
-                usuario.setNombre(result.getString("nombre"));
+                usuario.setNombre(result.getString("nombreUsuario"));
                 usuario.setRol(result.getString("rol"));
                 return Optional.of(usuario);
             }
@@ -90,7 +90,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
     @Override
     public void update(Usuario usuario) {
-        String sql = "UPDATE usuarios SET nombre = ?, rol = ? WHERE id_usuario = ?";
+        String sql = "UPDATE usuario SET nombreUsuario = ?, rol = ? WHERE id_usuario = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, usuario.getNombre());
@@ -104,7 +104,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM usuarios WHERE id_usuario = ?";
+        String sql = "DELETE FROM usuario WHERE id_usuario = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

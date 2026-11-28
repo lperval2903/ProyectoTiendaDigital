@@ -7,8 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class CheckoutService extends AbstractDAOImpl {
@@ -18,15 +17,11 @@ public class CheckoutService extends AbstractDAOImpl {
             throw new IllegalArgumentException("El carrito está vacío.");
         }
 
-        BigDecimal total = BigDecimal.ZERO;
         for (CartItem item : items) {
             if (item.getCantidad() < 1 || !Double.isFinite(item.getPrecio()) || item.getPrecio() < 0) {
                 throw new IllegalArgumentException("El carrito contiene un producto no válido.");
             }
-            total = total.add(BigDecimal.valueOf(item.getPrecio())
-                    .multiply(BigDecimal.valueOf(item.getCantidad())));
         }
-        total = total.setScale(2, java.math.RoundingMode.HALF_UP);
 
         try (Connection connection = connectDB()) {
             connection.setAutoCommit(false);
@@ -35,7 +30,7 @@ public class CheckoutService extends AbstractDAOImpl {
                     validateStock(connection, item);
                 }
 
-                int orderId = insertOrder(connection, userId, total);
+                int orderId = insertOrder(connection, userId);
                 for (CartItem item : items) {
                     insertDetail(connection, orderId, item);
                     decreaseStock(connection, item);
@@ -69,12 +64,11 @@ public class CheckoutService extends AbstractDAOImpl {
         }
     }
 
-    private int insertOrder(Connection connection, int userId, BigDecimal total) throws Exception {
-        String sql = "INSERT INTO pedidos (id_usuario, fecha, estado, total) VALUES (?, ?, 'pendiente', ?)";
+    private int insertOrder(Connection connection, int userId) throws Exception {
+        String sql = "INSERT INTO pedido (id_usuario, fecha, estado) VALUES (?, ?, 'pendiente')";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, userId);
-            statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            statement.setBigDecimal(3, total);
+            statement.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             statement.executeUpdate();
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (!keys.next()) {
@@ -86,7 +80,7 @@ public class CheckoutService extends AbstractDAOImpl {
     }
 
     private void insertDetail(Connection connection, int orderId, CartItem item) throws Exception {
-        String sql = "INSERT INTO detalle_pedido (id_producto, id_pedido, cantidad, precio_ud) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO detallePedido (id_producto, id_pedido, cantidad, precioUnidad) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, item.getIdProducto());
             statement.setInt(2, orderId);

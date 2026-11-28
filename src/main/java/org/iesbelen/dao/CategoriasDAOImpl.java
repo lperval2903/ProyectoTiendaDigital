@@ -13,7 +13,7 @@ public class CategoriasDAOImpl extends AbstractDAOImpl implements CategoriasDAO 
 
     @Override
     public void create(Categorias categoria) {
-        String sql = "INSERT INTO categorias (nombre_categoria) VALUES (?)";
+        String sql = "INSERT INTO categoria (nombreCategoria) VALUES (?)";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, categoria.getNombreCategoria());
@@ -26,14 +26,14 @@ public class CategoriasDAOImpl extends AbstractDAOImpl implements CategoriasDAO 
     @Override
     public List<Categorias> getAll() {
         List<Categorias> categorias = new ArrayList<Categorias>();
-        String sql = "SELECT id_categoria, nombre_categoria FROM categorias ORDER BY nombre_categoria";
+        String sql = "SELECT id_categoria, nombreCategoria FROM categoria ORDER BY nombreCategoria";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
                 Categorias categoria = new Categorias();
                 categoria.setIdCategoria(result.getInt("id_categoria"));
-                categoria.setNombreCategoria(result.getString("nombre_categoria"));
+                categoria.setNombreCategoria(result.getString("nombreCategoria"));
                 categorias.add(categoria);
             }
             return categorias;
@@ -44,7 +44,7 @@ public class CategoriasDAOImpl extends AbstractDAOImpl implements CategoriasDAO 
 
     @Override
     public Optional<Categorias> find(int id) {
-        String sql = "SELECT id_categoria, nombre_categoria FROM categorias WHERE id_categoria = ?";
+        String sql = "SELECT id_categoria, nombreCategoria FROM categoria WHERE id_categoria = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -54,7 +54,7 @@ public class CategoriasDAOImpl extends AbstractDAOImpl implements CategoriasDAO 
                 }
                 Categorias categoria = new Categorias();
                 categoria.setIdCategoria(result.getInt("id_categoria"));
-                categoria.setNombreCategoria(result.getString("nombre_categoria"));
+                categoria.setNombreCategoria(result.getString("nombreCategoria"));
                 return Optional.of(categoria);
             }
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class CategoriasDAOImpl extends AbstractDAOImpl implements CategoriasDAO 
 
     @Override
     public void update(Categorias categoria) {
-        String sql = "UPDATE categorias SET nombre_categoria = ? WHERE id_categoria = ?";
+        String sql = "UPDATE categoria SET nombreCategoria = ? WHERE id_categoria = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, categoria.getNombreCategoria());
@@ -77,7 +77,7 @@ public class CategoriasDAOImpl extends AbstractDAOImpl implements CategoriasDAO 
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM categorias WHERE id_categoria = ?";
+        String sql = "DELETE FROM categoria WHERE id_categoria = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

@@ -13,7 +13,7 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
 
     @Override
     public void create(DetallePedido detalle) {
-        String sql = "INSERT INTO detalle_pedido (id_producto, id_pedido, cantidad, precio_ud) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO detallePedido (id_producto, id_pedido, cantidad, precioUnidad) VALUES (?, ?, ?, ?)";
         try (Connection connection = connectDB()) {
             connection.setAutoCommit(false);
             try {
@@ -21,7 +21,6 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
                     bind(statement, detalle);
                     statement.executeUpdate();
                 }
-                recalculateOrderTotal(connection, detalle.getIdPedido());
                 connection.commit();
             } catch (Exception e) {
                 connection.rollback();
@@ -35,7 +34,7 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
     @Override
     public List<DetallePedido> getAll() {
         List<DetallePedido> detalles = new ArrayList<DetallePedido>();
-        String sql = "SELECT id_detalle, id_producto, id_pedido, cantidad, precio_ud FROM detalle_pedido ORDER BY id_pedido DESC, id_detalle";
+        String sql = "SELECT id_detalle, id_producto, id_pedido, cantidad, precioUnidad FROM detallePedido ORDER BY id_pedido DESC, id_detalle";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
@@ -50,7 +49,7 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
 
     @Override
     public Optional<DetallePedido> find(int id) {
-        String sql = "SELECT id_detalle, id_producto, id_pedido, cantidad, precio_ud FROM detalle_pedido WHERE id_detalle = ?";
+        String sql = "SELECT id_detalle, id_producto, id_pedido, cantidad, precioUnidad FROM detallePedido WHERE id_detalle = ?";
         try (Connection connection = connectDB();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -64,20 +63,14 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
 
     @Override
     public void update(DetallePedido detalle) {
-        String sql = "UPDATE detalle_pedido SET id_producto = ?, id_pedido = ?, cantidad = ?, precio_ud = ? WHERE id_detalle = ?";
+        String sql = "UPDATE detallePedido SET id_producto = ?, id_pedido = ?, cantidad = ?, precioUnidad = ? WHERE id_detalle = ?";
         try (Connection connection = connectDB()) {
             connection.setAutoCommit(false);
             try {
-                Integer previousOrderId = findOrderId(connection, detalle.getIdDetalle());
                 try (PreparedStatement statement = connection.prepareStatement(sql)) {
                     bind(statement, detalle);
                     statement.setInt(5, detalle.getIdDetalle());
-                    if (statement.executeUpdate() > 0) {
-                        if (previousOrderId != null && previousOrderId != detalle.getIdPedido()) {
-                            recalculateOrderTotal(connection, previousOrderId);
-                        }
-                        recalculateOrderTotal(connection, detalle.getIdPedido());
-                    }
+                    statement.executeUpdate();
                 }
                 connection.commit();
             } catch (Exception e) {
@@ -91,16 +84,13 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM detalle_pedido WHERE id_detalle = ?";
+        String sql = "DELETE FROM detallePedido WHERE id_detalle = ?";
         try (Connection connection = connectDB()) {
             connection.setAutoCommit(false);
             try {
-                Integer orderId = findOrderId(connection, id);
                 try (PreparedStatement statement = connection.prepareStatement(sql)) {
                     statement.setInt(1, id);
-                    if (statement.executeUpdate() > 0 && orderId != null) {
-                        recalculateOrderTotal(connection, orderId);
-                    }
+                    statement.executeUpdate();
                 }
                 connection.commit();
             } catch (Exception e) {
@@ -109,26 +99,6 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
             }
         } catch (Exception e) {
             throw new DaoException("No se pudo eliminar el detalle del pedido.", e);
-        }
-    }
-
-    private Integer findOrderId(Connection connection, int detailId) throws java.sql.SQLException {
-        String sql = "SELECT id_pedido FROM detalle_pedido WHERE id_detalle = ? FOR UPDATE";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, detailId);
-            try (ResultSet result = statement.executeQuery()) {
-                return result.next() ? result.getInt("id_pedido") : null;
-            }
-        }
-    }
-
-    private void recalculateOrderTotal(Connection connection, int orderId) throws java.sql.SQLException {
-        String sql = "UPDATE pedidos SET total = (SELECT COALESCE(SUM(cantidad * precio_ud), 0) "
-                + "FROM detalle_pedido WHERE id_pedido = ?) WHERE id_pedido = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, orderId);
-            statement.setInt(2, orderId);
-            statement.executeUpdate();
         }
     }
 
@@ -145,7 +115,7 @@ public class DetallePedidoDAOImpl extends AbstractDAOImpl implements DetallePedi
         detalle.setIdProducto(result.getInt("id_producto"));
         detalle.setIdPedido(result.getInt("id_pedido"));
         detalle.setCantidad(result.getInt("cantidad"));
-        detalle.setPrecioUd(result.getDouble("precio_ud"));
+        detalle.setPrecioUd(result.getDouble("precioUnidad"));
         return detalle;
     }
 }
